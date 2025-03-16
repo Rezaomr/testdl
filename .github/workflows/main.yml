@@ -2,8 +2,6 @@ name: Download and Push Build Tools
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * 1'  # اجرای هفتگی (دوشنبه‌ها)
 
 jobs:
   download-and-push:
