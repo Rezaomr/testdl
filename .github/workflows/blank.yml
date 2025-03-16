@@ -17,7 +17,7 @@ jobs:
       - name: Read Links from File
         id: read_links
         run: |
-          links=$(cat assets/links.txt)
+          links=$(cat links.txt)
           echo "LINKS<<EOF" >> $GITHUB_ENV
           echo "$links" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
