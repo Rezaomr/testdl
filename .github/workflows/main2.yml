@@ -1,0 +1,40 @@
+name: Download and Push Files from Links
+
+on:
+  workflow_dispatch:
+
+jobs:
+  download-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create Download Directory
+        run: mkdir -p build-tools
+
+      - name: Read Links from File
+        id: read_links
+        run: |
+          links=$(cat assets/links.txt)
+          echo "LINKS<<EOF" >> $GITHUB_ENV
+          echo "$links" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Download Files
+        run: |
+          IFS=$'\n' read -d '' -r -a urls <<< "${{ env.LINKS }}"
+          for url in "${urls[@]}"; do
+            filename="build-tools/$(basename $url)"
+            echo "Downloading $url to $filename"
+            curl -L --retry 5 --retry-delay 10 -o "$filename" "$url"
+          done
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add build-tools
+          git commit -m "Add downloaded files from links.txt" || echo "No changes to commit"
+          git push origin main
