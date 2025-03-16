@@ -1,8 +1,5 @@
 name: Download and Push Build Tools
 
-on:
-  workflow_dispatch:
-
 jobs:
   download-and-push:
     runs-on: ubuntu-latest
